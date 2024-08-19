@@ -16,7 +16,6 @@ This project involves applying complex mathematical functions to matrices using 
 
 The program is designed to be run from the command line, with the following general usage:
 
-## Running the Program
 To run the program:
 ```sh
 python 108trigo fun a0 a1 a2 ...
@@ -39,17 +38,17 @@ Replace fun with the function you want to apply (EXP, COS, etc.) and provide the
 
 Cosine of a Matrix
 ```sh
-python 108trigo.py COS 4 5 9 3 3 5 0 1 9
+python 108trigo COS 4 5 9 3 3 5 0 1 9
 ```
-OUtput
-```diff
+Output
+```sh
 0.70 -0.43 -1.94
 -0.16 0.67 -1.23
 -0.06 -0.15 0.07
 ```
 Exponential of a Matrix
 ```sh
-python 108trigo.py EXP 1 2 3 4
+python 108trigo EXP 1 2 3 4
 ```
 ```diff
 51.97 74.74
@@ -57,7 +56,7 @@ python 108trigo.py EXP 1 2 3 4
 ```
 Hyperbolic Sine of a Matrix
 ```sh
-python 108trigo.py SINH 1 0 2 0
+python 108trigo SINH 1 0 2 0
 ```
 ```diff
 1.18 0.00
