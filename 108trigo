@@ -1,0 +1,198 @@
+#!/usr/bin/python3
+
+##
+## EPITECH PROJECT, 2024
+## 108trigo
+## File description:
+## Description du fichier
+##
+
+import sys
+
+def build_matrix(matrix_arg):
+    matrix_arg = [float(arg) for arg in matrix_arg]
+    matrix_len = int(len(matrix_arg) ** 0.5)    
+    if matrix_len * matrix_len != len(matrix_arg):
+        print("Erreur: the matrix is not square. -h for help")
+        sys.exit(84)
+    matrix = []
+    for i in range(matrix_len):
+        begin = i * matrix_len
+        end = (i + 1) * matrix_len
+        line = matrix_arg[begin:end]
+        matrix.append(line)
+    return matrix
+
+def matrix_multiply(a, b):
+    result = []
+    for i in range(len(a)):
+        row = []
+        for j in range(len(b[0])):
+            sum_val = 0
+            for k in range(len(a[0])):
+                sum_val += a[i][k] * b[k][j]
+            row.append(sum_val)
+        result.append(row)
+    return result
+
+def disp_usage():
+    print("USAGE")
+    print("\t./108trigo fun a0 a1 a2 ...#br")
+    print("\nDESCRIPTION")
+    print("\tfun\tfunction to be applied, among at least “EXP”, “COS”, “SIN”, “COSH” and “SINH”")
+    print("\tai\tcoeficients of the matrix")
+    sys.exit(0)
+
+def check_args():
+    if len(sys.argv) < 3:
+        print("Error : invalid number of arguments. -h for help.")
+        sys.exit(84)
+    if sys.argv[1] != "EXP" and sys.argv[1] != "COS" and sys.argv[1] != "SIN" and sys.argv[1] != "COSH" and sys.argv[1] != "SINH":
+        print("Error : invalid arguments. -h for help.")
+        sys.exit(84)
+
+def factorial(n):
+    if n == 0 or n == 1:
+        return 1
+    else:
+        return n * factorial(n - 1)
+
+def matrix_add(a, b):
+    result = []
+    for i in range(len(a)):
+        row = [a[i][j] + b[i][j] for j in range(len(a[0]))]
+        result.append(row)
+    return result
+
+def matrix_scalar_divide(matrix, scalar):
+    result = []
+    for i in range(len(matrix)):
+        row = [element / scalar for element in matrix[i]]
+        result.append(row)
+    return result
+
+def exp_matrix(matrix):
+    matrix_n = len(matrix)
+    matrix_i = [[0 for i in range(matrix_n)] for i in range(matrix_n)]
+    for i in range(matrix_n):
+        matrix_i[i][i] = 1
+
+    sum_matrix = matrix_i
+    current_term = matrix_i
+    n = 17
+    for k in range(1, n + 1):
+        current_term = matrix_multiply(current_term, matrix) if k > 1 else matrix
+        term_divided = matrix_scalar_divide(current_term, factorial(k))
+        sum_matrix = matrix_add(sum_matrix, term_divided)
+    for row in sum_matrix:
+        print('\t'.join(f"{item:.2f}" for item in row))
+
+def matrix_subtract(a, b):
+    result = []
+    for i in range(len(a)):
+        row = [a[i][j] - b[i][j] for j in range(len(a[0]))]
+        result.append(row)
+    return result
+
+def cos_matrix(matrix):
+    matrix_n = len(matrix)
+    matrix_i = []
+
+    for j in range(matrix_n):
+        row = [1 if i == j else 0 for i in range(matrix_n)]
+        matrix_i.append(row)
+  
+    sum_matrix = matrix_i[:]
+    current_term = matrix_i[:]
+    n = 20
+    for k in range(1, n):
+        if k > 0:
+            current_term = matrix_multiply(current_term, matrix)
+            current_term = matrix_multiply(current_term, matrix)
+        factorial_2k = factorial(2 * k)
+        term_divided = matrix_scalar_divide(current_term, factorial_2k)
+        if k % 2 == 0:
+            sum_matrix = matrix_add(sum_matrix, term_divided)
+        else:
+            sum_matrix = matrix_subtract(sum_matrix, term_divided)
+    for row in sum_matrix:
+        print('\t'.join(f"{item:.2f}" for item in row))
+
+def cosh_matrix(matrix):
+    matrix_n = len(matrix)
+    matrix_i = []
+
+    for j in range(matrix_n):
+        row = [1 if i == j else 0 for i in range(matrix_n)]
+        matrix_i.append(row)
+
+    sum_matrix = matrix_i[:]
+    current_term = matrix_i[:]
+    n = 20
+    for k in range(1, n):
+        if k > 0:
+            current_term = matrix_multiply(current_term, matrix)
+            current_term = matrix_multiply(current_term, matrix)
+        factorial_2k = factorial(2 * k)
+        term_divided = matrix_scalar_divide(current_term, factorial_2k)
+        sum_matrix = matrix_add(sum_matrix, term_divided)
+    for row in sum_matrix:
+        print('\t'.join(f"{item:.2f}" for item in row))
+
+def sin_matrix(matrix):
+    n = 20
+    matrix_n = len(matrix)
+    sum_matrix = [[0.0 for _ in range(matrix_n)] for _ in range(matrix_n)]
+    current_term = matrix
+
+    for k in range(n):
+        power = 2 * k + 1
+        temp_term = [[float(i == j) for i in range(matrix_n)] for j in range(matrix_n)]
+        for _ in range(power):
+            temp_term = matrix_multiply(temp_term, matrix)
+        factorial_2k_plus_1 = factorial(power)
+        term_divided = matrix_scalar_divide(temp_term, factorial_2k_plus_1)
+        if k % 2 == 0:
+            sum_matrix = matrix_add(sum_matrix, term_divided)
+        else:
+            sum_matrix = matrix_subtract(sum_matrix, term_divided)
+
+    for row in sum_matrix:
+        print('\t'.join(f"{item:.2f}" for item in row))
+        
+
+def sinh_matrix(matrix):
+    n = 20
+    matrix_n = len(matrix)
+    sum_matrix = [[0.0 for i in range(matrix_n)] for i in range(matrix_n)]
+
+    for k in range(n):
+        power = 2 * k + 1 
+        current_term = matrix
+        for i in range(1, power):
+            current_term = matrix_multiply(current_term, matrix)
+        factorial_2n_plus_1 = factorial(power)
+        term_divided = matrix_scalar_divide(current_term, factorial_2n_plus_1)
+        sum_matrix = matrix_add(sum_matrix, term_divided)
+    for row in sum_matrix:
+        print('\t'.join(f"{item:.2f}" for item in row))
+
+def main():
+    if len(sys.argv) == 2 and sys.argv[1] == "-h":
+        disp_usage()
+    check_args()
+    name_funtion = sys.argv[1]
+    matrix_arg = sys.argv[2:]
+    matrix = build_matrix(matrix_arg)
+
+    map_function = {
+        'EXP': exp_matrix,
+        'COS': cos_matrix,
+        'SIN': sin_matrix,
+        'COSH': cosh_matrix,
+        'SINH': sinh_matrix,
+    }
+    map_function[name_funtion](matrix)
+
+if __name__ == "__main__":
+    main()
